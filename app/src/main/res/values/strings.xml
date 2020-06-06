@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">demo-app</string>
+    <string name="loading_tasks_error">Error while loading tasks</string>
+    <string name="requestTimeOutError" />
+    <string name="responseMalformedJson" />
+    <string name="networkError" />
+    <string name="unknownError" />
+</resources>
