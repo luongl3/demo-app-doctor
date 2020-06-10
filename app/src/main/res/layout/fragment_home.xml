@@ -23,13 +23,15 @@
         android:orientation="vertical">
 
         <include
+            android:id="@+id/layout_top"
             layout="@layout/layout_menu_top"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_top"
             app:resource="@{categories}" />
 
         <androidx.recyclerview.widget.RecyclerView

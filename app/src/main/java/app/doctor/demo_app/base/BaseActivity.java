@@ -63,22 +63,12 @@ public abstract class BaseActivity<D extends ViewDataBinding> extends AppCompatA
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
-        setupActionBar();
         dataBinding = DataBindingUtil.setContentView(this, getLayoutRes());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.white, this.getTheme()));
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
     }
-
-    public void setupActionBar() {
-
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
-            mActionBar = getSupportActionBar();
-            if (mActionBar != null) {
-                mActionBar.setDisplayHomeAsUpEnabled(isDisplayedHomeAsUpEnabled);
-                mActionBar.setDisplayShowTitleEnabled(false);
-            }
-        }
-    }
-
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {

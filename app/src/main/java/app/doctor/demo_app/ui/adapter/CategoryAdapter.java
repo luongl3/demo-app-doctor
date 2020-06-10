@@ -2,6 +2,7 @@ package app.doctor.demo_app.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,9 @@ public class CategoryAdapter extends BaseAdapter<CategoryAdapter.ViewHolder, Cat
     private List<CategoryItem> categoryItemList;
     private OnItemClick callBack;
     private static Context mContext;
+    private int currentPosition = 0;
+    private int prePos = 0;
+    private boolean isFirst = true;
 
     public CategoryAdapter(OnItemClick callBack, Context mContext) {
         this.categoryItemList = new ArrayList<>();
@@ -49,6 +53,20 @@ public class CategoryAdapter extends BaseAdapter<CategoryAdapter.ViewHolder, Cat
     @Override
     public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int position) {
         holder.onBind(categoryItemList.get(position));
+
+        if (position != currentPosition) {
+            holder.binding.tvCategoryName.setTextColor(mContext.getResources().getColor(R.color.black));
+        } else
+            holder.binding.tvCategoryName.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
+
+        holder.binding.getRoot().setOnClickListener(v -> {
+            callBack.categoryOnClick(holder.binding.getCategory());
+            prePos = currentPosition;
+            currentPosition = position;
+            callBack.categoryOnClick(holder.binding.getCategory());
+            notifyItemChanged(currentPosition);
+            notifyItemChanged(prePos);
+        });
     }
 
     @Override
@@ -68,10 +86,6 @@ public class CategoryAdapter extends BaseAdapter<CategoryAdapter.ViewHolder, Cat
         private ViewHolder(CategoryItemBinding binding, OnItemClick callback) {
             super(binding.getRoot());
             this.binding = binding;
-            binding.getRoot().setOnClickListener(v -> {
-                binding.tvCategoryName.setTextColor(mContext.getResources().getColor(R.color.colorPrimary));
-                callback.categoryOnClick(binding.getCategory());
-            });
         }
 
         private void onBind(CategoryItem categoryItem) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lnTopBar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
@@ -17,6 +18,19 @@
         android:scaleType="center"
         android:src="@drawable/ic_back" />
 
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:background="@color/trans"
+        android:padding="@dimen/padding_16"
+        android:scaleType="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        tools:text="장보고 채널" />
+
     <ImageView
         android:id="@+id/imgSaveOff"
         android:layout_width="wrap_content"
@@ -27,6 +41,19 @@
         android:contentDescription="@string/app_name"
         android:padding="@dimen/padding_16"
         android:scaleType="center"
-        android:src="@drawable/ic_save_off" />
+        android:src="@drawable/ic_save_off"
+        android:visibility="gone" />
+
+    <SearchView
+        android:id="@+id/btn_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="2dp"
+        android:background="@color/trans"
+        android:contentDescription="@string/app_name"
+        android:padding="@dimen/padding_16"
+        android:scaleType="center"
+        android:searchIcon="@drawable/ic_search" />
 
 </RelativeLayout>

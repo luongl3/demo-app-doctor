@@ -17,6 +17,7 @@ import javax.inject.Inject;
 
 import app.doctor.demo_app.R;
 import app.doctor.demo_app.base.BaseActivity;
+import app.doctor.demo_app.data.remote.Status;
 import app.doctor.demo_app.databinding.LoginActivityBinding;
 import app.doctor.demo_app.utils.Constants;
 import app.doctor.demo_app.utils.Utils;
@@ -45,11 +46,6 @@ public class LoginActivity extends BaseActivity<LoginActivityBinding> implements
         super.onCreate(savedInstanceState);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginViewModel.class);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.white, this.getTheme()));
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
-
         dataBinding.btnLogin.setOnClickListener(this);
     }
 
@@ -75,9 +71,12 @@ public class LoginActivity extends BaseActivity<LoginActivityBinding> implements
             showLoadingDialog();
             viewModel.setUserInfo(dataBinding.editUserName.getText().toString().trim(), dataBinding.editPassword.getText().toString().trim());
             viewModel.login().observe(this, resource -> {
-                if (resource.data != null && !TextUtils.isEmpty(resource.data.getMemberId()) && isGoMain) {
+                if (resource.status == Status.SUCCESS && resource.data != null && !TextUtils.isEmpty(resource.data.getMemberId()) && isGoMain) {
                     Utils.savePreference(Constants.PREF_MEMBER_IDX, resource.data.getMemberIdx());
                     gotoMainActivity();
+                } else if (resource.status == Status.ERROR) {
+                    hideLoadingDialog();
+                    showErrorDialog(resource.getCodeMsg(), false);
                 }
             });
         }

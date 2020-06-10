@@ -2,6 +2,7 @@ package app.doctor.demo_app.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -43,6 +44,9 @@ public class ChannelDetailFragment extends BaseFragment<ChannelDetailViewModel, 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setVisibilitySaveOff(true);
+        setVisibilitySearchView(false);
+        setVisibilityTitle(false);
         initView();
         Bundle args = getArguments();
         if (null != args) {
@@ -94,7 +98,6 @@ public class ChannelDetailFragment extends BaseFragment<ChannelDetailViewModel, 
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
 
     @Override

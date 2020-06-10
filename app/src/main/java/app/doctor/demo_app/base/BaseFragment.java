@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
@@ -42,6 +43,12 @@ public abstract class BaseFragment<V extends ViewModel, D extends ViewDataBindin
     @BindView(R.id.imgBack)
     protected ImageView mImgBack;
     Unbinder mUnbinder;
+    @BindView(R.id.btn_search)
+    protected SearchView searchView;
+    @BindView(R.id.tv_title)
+    protected TextView tvTitle;
+    @BindView(R.id.imgSaveOff)
+    protected ImageView btnSaveOff;
 
     protected abstract Class<V> getViewModel();
 
@@ -60,7 +67,7 @@ public abstract class BaseFragment<V extends ViewModel, D extends ViewDataBindin
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         dataBinding = DataBindingUtil.inflate(inflater, getLayoutRes(), container, false);
         mMainView = inflater.inflate(getLayoutRes(), container, false);
-        mUnbinder = ButterKnife.bind(this, mMainView);
+        mUnbinder = ButterKnife.bind(this, dataBinding.getRoot());
         return dataBinding.getRoot();
     }
 
@@ -119,5 +126,25 @@ public abstract class BaseFragment<V extends ViewModel, D extends ViewDataBindin
     public void hideLoadingDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing())
             mProgressDialog.dismiss();
+    }
+
+    public void setTvTitle(String title) {
+        tvTitle.setText(title);
+    }
+
+    public void setVisibilityTitle(boolean visibility) {
+        tvTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+
+    public void setVisibilitySearchView(boolean visibility) {
+        searchView.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+
+    public void setVisibilitySaveOff(boolean visibility) {
+        btnSaveOff.setVisibility(visibility ? View.VISIBLE : View.GONE);
+    }
+
+    public void setVisibilityBackButton(boolean visibility) {
+        mImgBack.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 }

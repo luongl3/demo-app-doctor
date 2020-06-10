@@ -4,11 +4,14 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home"
+        android:checked="true"
         android:title="@string/title_home" />
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_mart_info"
+        android:checked="false"
+        android:iconTint="#afb5b5"
         android:title="@string/title_dashboard" />
 
     <item

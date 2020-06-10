@@ -54,13 +54,6 @@ public class ChannelAdapter extends BaseAdapter<ChannelAdapter.ViewHolder, Chann
     public void onBindViewHolder(@NonNull ChannelAdapter.ViewHolder holder, int position) {
         holder.onBind(channelItemsFiltered.get(position));
         Picasso.get().load(channelItemList.get(position).imgPath).error(R.drawable.ic_place_holder).into(holder.binding.imgChanel);
-
-//        Picasso.with(getActivity())
-//                .load(imageUrl)
-//                .error(R.drawable.error)
-//                .resize(screenWidth, imageHeight)
-//                .centerInside()
-//                .into(imageView);
     }
 
     @Override

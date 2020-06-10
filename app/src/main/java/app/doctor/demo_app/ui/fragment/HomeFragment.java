@@ -5,8 +5,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
@@ -16,10 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import app.doctor.demo_app.base.BaseActivity;
 import app.doctor.demo_app.data.remote.model.CategoryItem;
 import app.doctor.demo_app.data.remote.model.ChannelItem;
-import app.doctor.demo_app.ui.activity.MainActivity;
 import app.doctor.demo_app.ui.adapter.CategoryAdapter;
 import app.doctor.demo_app.ui.callback.NavigationViewCallBack;
 import app.doctor.demo_app.ui.callback.OnItemClick;
@@ -54,6 +50,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
+
         dataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         dataBinding.recyclerView.setAdapter(new ChannelAdapter(this));
 
@@ -68,9 +65,18 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        viewModel.getCategories().observe(this, listResource -> {
+        callApi();
+        initSearchView();
+    }
+
+    private void callApi() {
+        setVisibilitySaveOff(false);
+        setVisibilitySearchView(true);
+        setVisibilityBackButton(false);
+        setTvTitle("장보고 채널");
+        viewModel.getCategories().observe(getViewLifecycleOwner(), listResource -> {
             dataBinding.setCategories(listResource);
-            if (listResource.status == Status.SUCCESS && listResource.data != null) {
+            if (listResource.data != null && listResource.data.size() > 0) {
                 viewModel.setCategoryIdx(listResource.data.get(0).getCategoryIdx());
                 viewModel.getChannels()
                         .observe(this, resource -> {
@@ -81,22 +87,10 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
                         });
             }
         });
-
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        if (null == getActivity())
-            return;
-
-        SearchView searchView;
-        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        // Associate searchable configuration with the SearchView
+    private void initSearchView() {
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.action_search)
-                .getActionView();
-
         searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getActivity().getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
@@ -119,8 +113,8 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
                 return false;
             }
         });
-        super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     protected Class<HomeViewModel> getViewModel() {
@@ -168,7 +162,6 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
     public void onResume() {
         super.onResume();
         callBack.onShowNavigationBottomBar();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     @Override
