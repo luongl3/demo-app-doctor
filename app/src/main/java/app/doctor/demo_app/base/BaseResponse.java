@@ -1,5 +1,7 @@
 package app.doctor.demo_app.base;
 
+import androidx.room.Ignore;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -9,8 +11,26 @@ import com.google.gson.annotations.SerializedName;
  * A: HCMC, VN
  */
 public class BaseResponse {
+    @Ignore
     @SerializedName("code")
     private String statusCode;
+    @Ignore
     @SerializedName("code_msg")
     private String statusMsg;
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getStatusMsg() {
+        return statusMsg;
+    }
+
+    public void setStatusMsg(String statusMsg) {
+        this.statusMsg = statusMsg;
+    }
 }

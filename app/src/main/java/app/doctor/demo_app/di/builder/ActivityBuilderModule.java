@@ -1,5 +1,7 @@
 package app.doctor.demo_app.di.builder;
 
+import app.doctor.demo_app.base.BaseActivity;
+import app.doctor.demo_app.ui.activity.LoginActivity;
 import app.doctor.demo_app.ui.activity.MainActivity;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -15,5 +17,8 @@ public abstract class ActivityBuilderModule {
 
     @SuppressWarnings("unused")
     @ContributesAndroidInjector(modules = FragmentBuilderModule.class)
-    abstract MainActivity mainActivity();
+    abstract MainActivity baseActivity();
+
+    @ContributesAndroidInjector(modules = FragmentBuilderModule.class)
+    abstract LoginActivity loginActivity();
 }

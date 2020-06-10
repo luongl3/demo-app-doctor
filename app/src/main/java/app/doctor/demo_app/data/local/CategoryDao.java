@@ -8,7 +8,7 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import app.doctor.demo_app.data.Category;
+import app.doctor.demo_app.data.remote.model.CategoryItem;
 
 /**
  * Created by luonglc on 5/6/2020
@@ -19,9 +19,9 @@ import app.doctor.demo_app.data.Category;
 @Dao
 public interface CategoryDao {
 
-//    @Query("SELECT * FROM categories")
-//    LiveData<List<Category>> loadCategories();
-//
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    void saveCategories(List<Category> categories);
+    @Query("SELECT * FROM categories")
+    LiveData<List<CategoryItem>> loadCategories();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void saveCategories(List<CategoryItem> categories);
 }

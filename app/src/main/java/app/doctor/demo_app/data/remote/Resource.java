@@ -15,12 +15,13 @@ import static app.doctor.demo_app.data.remote.Status.SUCCESS;
  */
 public class Resource<T> {
     @NonNull
-    public final Status status;
+    public Status status;
 
     @Nullable
-    public final T data;
+    public T data;
 
-    @Nullable private final String message;
+    @Nullable
+    private String message;
 
     private Resource(@NonNull Status status, @Nullable T data, @Nullable String message) {
         this.status = status;

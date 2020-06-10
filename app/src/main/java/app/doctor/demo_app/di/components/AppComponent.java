@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import app.doctor.demo_app.DemoApp;
 import app.doctor.demo_app.di.builder.ActivityBuilderModule;
+import app.doctor.demo_app.di.builder.FragmentBuilderModule;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjectionModule;
@@ -20,7 +21,8 @@ import dagger.android.AndroidInjectionModule;
 @Component(modules = {
         AppModule.class,
         AndroidInjectionModule.class,
-        ActivityBuilderModule.class})
+        ActivityBuilderModule.class,
+        FragmentBuilderModule.class})
 public interface AppComponent {
 
     @Component.Builder

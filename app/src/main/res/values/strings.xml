@@ -1,8 +1,19 @@
 <resources>
     <string name="app_name">demo-app</string>
     <string name="loading_tasks_error">Error while loading tasks</string>
-    <string name="requestTimeOutError" />
-    <string name="responseMalformedJson" />
-    <string name="networkError" />
-    <string name="unknownError" />
+    <!-- Network Errors-->
+    <string name="networkError">Oh! You are not connected to a wifi or cellular data network. Please connect and try again</string>
+    <string name="networkErrorCode">NO_INTERNET_CONNECTION</string>
+    <string name="unknownError">Something went wrong!</string>
+    <string name="requestTimeOutError">Oooops! We couldn’t capture your request in time. Please try again.</string>
+    <string name="responseMalformedJson">Oops! We hit an error. Try again later.</string>
+
+    <string name="title_home">홈</string>
+    <string name="title_dashboard">단골마트</string>
+    <string name="title_notifications">장보고채널</string>
+    <string name="title_more">더보기</string>
+    <string name="action_search">Search</string>
+    <string name="processing">가공</string>
+    <string name="close" >닫기</string>
+    <string name="exit_app" >응용 프로그램을 종료 하시겠습니까?</string>
 </resources>

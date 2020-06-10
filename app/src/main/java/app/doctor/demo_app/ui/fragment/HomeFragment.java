@@ -1,21 +1,36 @@
 package app.doctor.demo_app.ui.fragment;
 
+import android.annotation.SuppressLint;
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import app.doctor.demo_app.ChanelViewModel;
+import app.doctor.demo_app.base.BaseActivity;
+import app.doctor.demo_app.data.remote.model.CategoryItem;
+import app.doctor.demo_app.data.remote.model.ChannelItem;
+import app.doctor.demo_app.ui.activity.MainActivity;
+import app.doctor.demo_app.ui.adapter.CategoryAdapter;
+import app.doctor.demo_app.ui.callback.NavigationViewCallBack;
+import app.doctor.demo_app.ui.callback.OnItemClick;
+import app.doctor.demo_app.utils.Constants;
+import app.doctor.demo_app.utils.FragmentUtils;
+import app.doctor.demo_app.viewmodel.HomeViewModel;
 import app.doctor.demo_app.R;
 import app.doctor.demo_app.base.BaseFragment;
 import app.doctor.demo_app.data.remote.Status;
-import app.doctor.demo_app.data.remote.model.ChanelItem;
 import app.doctor.demo_app.databinding.FragmentHomeBinding;
-import app.doctor.demo_app.ui.callback.CategoryCallBack;
+import app.doctor.demo_app.ui.adapter.ChannelAdapter;
 
 /**
  * Created by luonglc on 5/6/2020
@@ -23,15 +38,10 @@ import app.doctor.demo_app.ui.callback.CategoryCallBack;
  * C: ANTS Programmatic Company
  * A: HCMC, VN
  */
-public class HomeFragment extends BaseFragment<ChanelViewModel, FragmentHomeBinding>
-        implements CategoryCallBack {
+public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBinding>
+        implements OnItemClick {
 
-    public static HomeFragment newInstance() {
-        Bundle args = new Bundle();
-        HomeFragment fragment = new HomeFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private NavigationViewCallBack callBack;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,40 +55,125 @@ public class HomeFragment extends BaseFragment<ChanelViewModel, FragmentHomeBind
         super.onCreateView(inflater, container, savedInstanceState);
         setHasOptionsMenu(true);
         dataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        dataBinding.recyclerView.setAdapter(new ArticleListAdapter(this));
+        dataBinding.recyclerView.setAdapter(new ChannelAdapter(this));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        dataBinding.rcvCategories.setLayoutManager(layoutManager);
+        dataBinding.rcvCategories.setAdapter(new CategoryAdapter(this, getContext()));
+
         return dataBinding.getRoot();
     }
 
+    @SuppressLint("FragmentLiveDataObserve")
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        viewModel.getChanelList()
-                .observe(getViewLifecycleOwner(), listResource -> {
-                    if (null != listResource && (listResource.status == Status.ERROR || listResource.status == Status.SUCCESS)) {
-                        dataBinding.loginProgress.setVisibility(View.GONE);
-                    }
-                    dataBinding.setResource(listResource);
-                    if (null != dataBinding.recyclerView.getAdapter() && dataBinding.recyclerView.getAdapter().getItemCount() > 0) {
-                        dataBinding.errorText.setVisibility(View.GONE);
-                    }
-                });
-
-    }
-
-
-    @Override
-    public void onChanelClicked(ChanelItem chanelItem) {
+        viewModel.getCategories().observe(this, listResource -> {
+            dataBinding.setCategories(listResource);
+            if (listResource.status == Status.SUCCESS && listResource.data != null) {
+                viewModel.setCategoryIdx(listResource.data.get(0).getCategoryIdx());
+                viewModel.getChannels()
+                        .observe(this, resource -> {
+                            if (null != resource && (resource.status == Status.ERROR || resource.status == Status.SUCCESS)) {
+                                hideLoadingDialog();
+                            }
+                            dataBinding.setResource(resource);
+                        });
+            }
+        });
 
     }
 
     @Override
-    protected Class<ChanelViewModel> getViewModel() {
-        return ChanelViewModel.class;
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        if (null == getActivity())
+            return;
+
+        SearchView searchView;
+        getActivity().getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search)
+                .getActionView();
+
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getActivity().getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                if (null != dataBinding.recyclerView.getAdapter())
+                    ((ChannelAdapter) dataBinding.recyclerView.getAdapter()).getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                if (null != dataBinding.recyclerView.getAdapter())
+                    ((ChannelAdapter) dataBinding.recyclerView.getAdapter()).getFilter().filter(query);
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    protected Class<HomeViewModel> getViewModel() {
+        return HomeViewModel.class;
     }
 
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_home;
+    }
+
+    @Override
+    public void categoryOnClick(CategoryItem categoryItem) {
+        showLoadingDialog();
+        viewModel.setCategoryIdx(categoryItem.categoryIdx);
+        viewModel.getChannels()
+                .observe(getViewLifecycleOwner(), resource -> {
+                    if (null != resource && (resource.status == Status.ERROR || resource.status == Status.SUCCESS)) {
+                        hideLoadingDialog();
+                    }
+                    dataBinding.setResource(resource);
+                });
+
+    }
+
+    @Override
+    public void onChannelClicked(ChannelItem channelItem) {
+        if (null != getActivity()) {
+            showLoadingDialog();
+            Bundle args = new Bundle();
+            args.putString(Constants.PREF_CHANNEL_BOARD_IDX, channelItem.getBoarIdx());
+            ChannelDetailFragment detailFragment = new ChannelDetailFragment();
+            detailFragment.setArguments(args);
+            FragmentUtils.replaceFragment((AppCompatActivity) getActivity(), detailFragment,
+                    R.id.fragContainer, true, FragmentUtils.TRANSITION_SLIDE_LEFT_RIGHT);
+            callBack.onHideNavigationBottomBar();
+        }
+    }
+
+    public void setNavigationCallBack(NavigationViewCallBack callBack) {
+        this.callBack = callBack;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        callBack.onShowNavigationBottomBar();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        hideLoadingDialog();
     }
 }

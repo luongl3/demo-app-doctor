@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="channelItem"
+            type="app.doctor.demo_app.data.remote.model.ChannelDetail" />
+    </data>
+
+    <ScrollView
+        android:id="@+id/layout_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/img_chanel"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY" >
+
+            </ImageView>
+
+            <include
+                android:id="@+id/layout_toolbar"
+                layout="@layout/layout_menu_top" />
+
+            <LinearLayout
+                android:id="@+id/linear_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_chanel"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <TextView
+                    android:id="@+id/tv_topic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="6"
+                    android:text="@{channelItem.category}"
+                    android:textColor="@color/colorAccent"
+                    tools:text="테마밥상" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/btn_like"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:src="@drawable/ic_heart" />
+
+                    <TextView
+                        android:id="@+id/tv_num_like"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{channelItem.likeCnt}"
+                        android:textColor="#484848"
+                        tools:text="23" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/btn_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_comment" />
+
+                    <TextView
+                        android:id="@+id/tv_num_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{channelItem.replyCnt}"
+                        android:textColor="#484848"
+                        tools:text="10" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_status"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:text="@{channelItem.title}"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                tools:text="다이어트 식단의 모든것" />
+
+            <TextView
+                android:id="@+id/tv_ins_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_title"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@{channelItem.insDate}"
+                android:textColor="#ced4d4"
+                android:textSize="16sp" />
+
+            <WebView
+                android:id="@+id/web_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/tv_ins_date"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:paddingStart="36dp"
+                android:paddingEnd="36dp"
+                android:scaleType="centerInside"
+                android:scrollbars="none"
+                tools:ignore="WebViewLayout" />
+        </RelativeLayout>
+    </ScrollView>
+</layout>

@@ -5,12 +5,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 /**
- * Generic Base adapter for recycler views
- * <p>
- * Author: Lajesh D
- * Email: lajeshds2007@gmail.com
- * Created: 7/24/2018
- * Modified: 7/24/2018
+ * Created by luonglc on 5/6/2020
+ * E: lecongluong94@gmail.com
+ * C: ANTS Programmatic Company
+ * A: HCMC, VN
  */
 public abstract class BaseAdapter<T extends RecyclerView.ViewHolder, D> extends RecyclerView.Adapter<T>{
 

@@ -8,7 +8,7 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import app.doctor.demo_app.data.remote.model.ChanelItem;
+import app.doctor.demo_app.data.remote.model.ChannelItem;
 
 /**
  * Created by luonglc on 5/6/2020
@@ -18,9 +18,10 @@ import app.doctor.demo_app.data.remote.model.ChanelItem;
  */
 @Dao
 public interface ChanelDao {
-    @Query("SELECT * FROM chanelItem")
-    LiveData<List<ChanelItem>> loadChanelList();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void saveChanelList(List<ChanelItem> chanelItemList);
+    void saveChannelList(List<ChannelItem> channelItemList);
+
+    @Query("SELECT * FROM ChannelItem WHERE categoryIdx = :categoryIdx")
+    LiveData<List<ChannelItem>> loadChanelListWithCategory(String categoryIdx);
 }

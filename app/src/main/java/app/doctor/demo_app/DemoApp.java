@@ -5,6 +5,7 @@ import android.app.Application;
 
 import javax.inject.Inject;
 
+import app.doctor.demo_app.di.components.DaggerAppComponent;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
@@ -23,7 +24,7 @@ public class DemoApp extends Application implements HasActivityInjector {
 
     private static DemoApp sInstance;
 
-    public static DemoApp getAppContext() {
+    public static DemoApp getInstance() {
         return sInstance;
     }
 

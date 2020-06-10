@@ -8,8 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
+import app.doctor.demo_app.data.local.CategoryDao;
 import app.doctor.demo_app.data.local.ChanelDao;
+import app.doctor.demo_app.data.local.ChanelDetailDao;
 import app.doctor.demo_app.data.local.DemoAppDatabase;
+import app.doctor.demo_app.data.local.UserDao;
 import app.doctor.demo_app.data.remote.ApiConstants;
 import app.doctor.demo_app.data.remote.ApiService;
 import app.doctor.demo_app.di.module.ViewModelModule;
@@ -46,20 +49,38 @@ public class AppModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
-
         return retrofit.create(ApiService.class);
     }
 
     @Provides
     @Singleton
-    DemoAppDatabase provideArticleDatabase(Application application) {
-        return Room.databaseBuilder(application, DemoAppDatabase.class, "articles.db").build();
+    DemoAppDatabase provideDemoAppDatabase(Application application) {
+        return Room.databaseBuilder(application, DemoAppDatabase.class, "test.db").build();
     }
 
     @Provides
     @Singleton
-    ChanelDao provideArticleDao(DemoAppDatabase articleDatabase) {
-        return articleDatabase.chanelDao();
+    ChanelDao provideChannelDao(DemoAppDatabase database) {
+        return database.chanelDao();
+    }
+
+    @Provides
+    @Singleton
+    CategoryDao provideCategoryDao(DemoAppDatabase database) {
+        return database.categoryDao();
+    }
+
+
+    @Provides
+    @Singleton
+    ChanelDetailDao provideChannelDetailDao(DemoAppDatabase database) {
+        return database.chanelDetailDao();
+    }
+
+    @Provides
+    @Singleton
+    UserDao provideUserDao(DemoAppDatabase database) {
+        return database.userDao();
     }
 
 }

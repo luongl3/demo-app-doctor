@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -29,13 +30,13 @@ import retrofit2.Response;
  */
 public abstract class NetworkBoundResource<T, V> {
 
-    private final MediatorLiveData<Resource<T>> result = new MediatorLiveData<>();
+    private MediatorLiveData<Resource<T>> result = new MediatorLiveData<>();
 
     @MainThread
     protected NetworkBoundResource() {
         result.setValue(Resource.loading(null));
 
-        // Always load the data from DB intially so that we have
+        // Always load the data from DB initially so that we have
         LiveData<T> dbSource = loadFromDb();
 
         // Fetch the data from network and add it to the resource
@@ -53,7 +54,7 @@ public abstract class NetworkBoundResource<T, V> {
     }
 
     /**
-     * This method fetches the data from remoted service and save it to local db
+     * This method fetches the data from remote service and save it to local db
      *
      * @param dbSource - Database source
      */
@@ -77,15 +78,15 @@ public abstract class NetworkBoundResource<T, V> {
     private String getCustomErrorMessage(Throwable error) {
 
         if (error instanceof SocketTimeoutException) {
-            return DemoApp.getAppContext().getString(R.string.requestTimeOutError);
+            return DemoApp.getInstance().getString(R.string.requestTimeOutError);
         } else if (error instanceof MalformedJsonException) {
-            return DemoApp.getAppContext().getString(R.string.responseMalformedJson);
+            return DemoApp.getInstance().getString(R.string.responseMalformedJson);
         } else if (error instanceof IOException) {
-            return DemoApp.getAppContext().getString(R.string.networkError);
+            return DemoApp.getInstance().getString(R.string.networkError);
         } else if (error instanceof HttpException) {
             return (((HttpException) error).response().message());
         } else {
-            return DemoApp.getAppContext().getString(R.string.unknownError);
+            return DemoApp.getInstance().getString(R.string.unknownError);
         }
 
     }
@@ -97,7 +98,8 @@ public abstract class NetworkBoundResource<T, V> {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                saveCallResult(response);
+                if (response != null)
+                    saveCallResult(response);
                 return null;
             }
 
@@ -127,7 +129,7 @@ public abstract class NetworkBoundResource<T, V> {
     @MainThread
     protected abstract Call<V> createCall();
 
-    public final LiveData<Resource<T>> getAsLiveData() {
+    public LiveData<Resource<T>> getLiveData() {
         return result;
     }
 }

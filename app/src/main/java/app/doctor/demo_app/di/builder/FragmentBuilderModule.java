@@ -1,4 +1,6 @@
 package app.doctor.demo_app.di.builder;
+
+import app.doctor.demo_app.ui.fragment.ChannelDetailFragment;
 import app.doctor.demo_app.ui.fragment.HomeFragment;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -14,5 +16,9 @@ public abstract class FragmentBuilderModule {
 
     @SuppressWarnings("unused")
     @ContributesAndroidInjector
-    abstract HomeFragment contributeArticleListFragment();
+    abstract HomeFragment contributeChannelListFragment();
+
+    @SuppressWarnings("unused")
+    @ContributesAndroidInjector
+    abstract ChannelDetailFragment contributeChannelDetailFragment();
 }
