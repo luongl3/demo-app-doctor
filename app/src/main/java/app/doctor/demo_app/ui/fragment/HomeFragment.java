@@ -100,6 +100,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // filter recycler view when query submitted
+                tvTitle.setVisibility(View.GONE);
                 if (null != dataBinding.recyclerView.getAdapter())
                     ((ChannelAdapter) dataBinding.recyclerView.getAdapter()).getFilter().filter(query);
                 return false;
@@ -108,6 +109,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel, FragmentHomeBindin
             @Override
             public boolean onQueryTextChange(String query) {
                 // filter recycler view when text is changed
+                tvTitle.setVisibility(View.GONE);
                 if (null != dataBinding.recyclerView.getAdapter())
                     ((ChannelAdapter) dataBinding.recyclerView.getAdapter()).getFilter().filter(query);
                 return false;

@@ -68,18 +68,34 @@ public class LoginActivity extends BaseActivity<LoginActivityBinding> implements
     @Override
     public void onClick(View v) {
         if (v.getId() == dataBinding.btnLogin.getId()) {
-            showLoadingDialog();
-            viewModel.setUserInfo(dataBinding.editUserName.getText().toString().trim(), dataBinding.editPassword.getText().toString().trim());
-            viewModel.login().observe(this, resource -> {
-                if (resource.status == Status.SUCCESS && resource.data != null && !TextUtils.isEmpty(resource.data.getMemberId()) && isGoMain) {
-                    Utils.savePreference(Constants.PREF_MEMBER_IDX, resource.data.getMemberIdx());
-                    gotoMainActivity();
-                } else if (resource.status == Status.ERROR) {
-                    hideLoadingDialog();
-                    showErrorDialog(resource.getCodeMsg(), false);
-                }
-            });
+            if (validate(dataBinding.editUserName.getText().toString().trim(), dataBinding.editPassword.getText().toString().trim())) {
+                showLoadingDialog();
+                viewModel.setUserInfo(dataBinding.editUserName.getText().toString().trim(), dataBinding.editPassword.getText().toString().trim());
+                viewModel.login().observe(this, resource -> {
+                    if (resource.status == Status.SUCCESS && resource.data != null && !TextUtils.isEmpty(resource.data.getMemberId()) && isGoMain) {
+                        Utils.savePreference(Constants.PREF_MEMBER_IDX, resource.data.getMemberIdx());
+                        gotoMainActivity();
+                    } else if (resource.status == Status.ERROR) {
+                        hideLoadingDialog();
+                        showErrorDialog(resource.getCodeMsg(), false);
+                    }
+                });
+            }
         }
+    }
+
+    /**
+     * Check username and password must not be blank
+     *
+     * @param username username of the user
+     * @param password password
+     */
+    private boolean validate(String username, String password) {
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+            showErrorDialog(getString(R.string.login_not_validate), false);
+            return false;
+        }
+        return TextUtils.isEmpty(username) || android.util.Patterns.EMAIL_ADDRESS.matcher(username.trim()).matches();
     }
 
     private void gotoMainActivity() {

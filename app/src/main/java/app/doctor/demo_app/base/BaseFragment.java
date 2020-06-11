@@ -27,6 +27,7 @@ import app.doctor.demo_app.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 import butterknife.Unbinder;
 import dagger.android.support.AndroidSupportInjection;
 
@@ -68,6 +69,13 @@ public abstract class BaseFragment<V extends ViewModel, D extends ViewDataBindin
         dataBinding = DataBindingUtil.inflate(inflater, getLayoutRes(), container, false);
         mMainView = inflater.inflate(getLayoutRes(), container, false);
         mUnbinder = ButterKnife.bind(this, dataBinding.getRoot());
+
+        searchView.setBackgroundColor(getResources().getColor(R.color.trans));
+        searchView.setOnCloseListener(() -> {
+            tvTitle.setVisibility(View.VISIBLE);
+            return false;
+        });
+
         return dataBinding.getRoot();
     }
 
@@ -128,23 +136,23 @@ public abstract class BaseFragment<V extends ViewModel, D extends ViewDataBindin
             mProgressDialog.dismiss();
     }
 
-    public void setTvTitle(String title) {
+    protected void setTvTitle(String title) {
         tvTitle.setText(title);
     }
 
-    public void setVisibilityTitle(boolean visibility) {
+    protected void setVisibilityTitle(boolean visibility) {
         tvTitle.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
-    public void setVisibilitySearchView(boolean visibility) {
+    protected void setVisibilitySearchView(boolean visibility) {
         searchView.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
-    public void setVisibilitySaveOff(boolean visibility) {
+    protected void setVisibilitySaveOff(boolean visibility) {
         btnSaveOff.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
-    public void setVisibilityBackButton(boolean visibility) {
+    protected void setVisibilityBackButton(boolean visibility) {
         mImgBack.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 }

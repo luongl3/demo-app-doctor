@@ -16,4 +16,5 @@
     <string name="processing">가공</string>
     <string name="close" >닫기</string>
     <string name="exit_app" >응용 프로그램을 종료 하시겠습니까?</string>
+    <string name="login_not_validate">Username and password may not be blank</string>
 </resources>
