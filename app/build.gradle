@@ -24,13 +24,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    
+    plugins {
+  id "org.sonarqube" version "3.4.0.2513"
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "congluong94_analyser"
+    property "sonar.organization", "luongle"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+} 
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
 
     dataBinding { enabled = true }
-
 }
 
 dependencies {
